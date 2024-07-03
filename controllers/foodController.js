@@ -95,15 +95,17 @@ exports.create_food_post = [
     .trim()
     .isInt({ min: 0 })
     .withMessage("Stock must be a non-negative integer"),
+    
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
     const { name, category, description, price, stock } = req.body;
 
+    
     const categoryExists = await Category.findById(category);
 
     if (!categoryExists) {
-      errors.push({ msg: "Category does not exist" });
+      errors.errors.push({ msg: "Category does not exist", param: "category", location: "body" });
     }
     const food = new Food({
       name,
