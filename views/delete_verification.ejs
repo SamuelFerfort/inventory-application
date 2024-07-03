@@ -1,12 +1,24 @@
-<h1>Admin Verification Required</h1>
+<div class="container mt-4">
+  <h1 class="mb-4">Admin Verification Required</h1>
 
-<form method="POST" class="admin">
-  <div>
-    <label for="admin_password">Enter Admin Password:</label>
-    <input type="password" id="admin_password" name="admin_password" required />
-    <input type="hidden" name="food_id" value="<%= food_id %>" />
-    <input type="submit" value="Verify" />
-  </div>
+  <form method="POST" class="admin">
+    <div class="mb-3">
+      <label for="admin_password" class="form-label"
+        >Enter Admin Password:</label
+      >
+      <input
+        type="password"
+        id="admin_password"
+        name="admin_password"
+        class="form-control"
+        required
+      />
+      <input type="hidden" name="food_id" value="<%= food_id %>" />
+    </div>
+    <button type="submit" class="btn btn-primary">Verify</button>
 
-  <span class="error"><%= error ? error : "" %></span>
-</form>
+    <% if (error) { %>
+    <div class="alert alert-danger mt-3" role="alert"><%= error %></div>
+    <% } %>
+  </form>
+</div>

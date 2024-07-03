@@ -127,7 +127,7 @@ exports.create_food_post = [
       });
     } else {
       await food.save();
-      res.redirect("/");
+      res.redirect(food.url);
     }
   }),
 ];

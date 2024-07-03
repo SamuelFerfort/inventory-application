@@ -1,74 +1,60 @@
-<h1><%= title %></h1>
-
-<form method="post" class="food-form">
-  <div>
-    <label for="name"
-      >Name
-
-      <input
-        type="text"
-        name="name"
-        id="name"
-        value="<%= name ? name : '' %>"
-      />
-    </label>
+<div class="container mt-4">
+    <h1 class="mb-4"><%= title %></h1>
+  
+    <form method="post" class="food-form">
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" name="name" id="name" value="<%= name ? name : '' %>" required>
+      </div>
+  
+      <div class="mb-3">
+        <label for="category" class="form-label">Category</label>
+        <select name="category" id="category" class="form-select">
+          <% categories.forEach(function(category) { %>
+            <option value="<%= category._id %>" <%= category.name == selected_category ? 'selected' : '' %>>
+              <%= category.name %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+  
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          class="form-control"
+          name="description"
+          id="description"
+          placeholder="Enter food description..."
+          rows="4"
+          required
+          minlength="1"
+          maxlength="255"
+        ><%= description ? description : '' %></textarea>
+      </div>
+  
+      <div class="mb-3">
+        <label for="price" class="form-label">Price</label>
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input type="number" class="form-control" name="price" id="price" value="<%= price ? price : '' %>" step="0.01" min="0" required>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="stock" class="form-label">Stock</label>
+        <input type="number" class="form-control" name="stock" id="stock" value="<%= stock ? stock : '' %>" min="0" required>
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  
+    <% if (errors && errors.length > 0) { %>
+      <div class="alert alert-danger mt-3">
+        <ul class="mb-0">
+          <% errors.forEach(function(error) { %>
+            <li><%= error.msg %></li>
+          <% }); %>
+        </ul>
+      </div>
+    <% } %>
   </div>
-
-  <div>
-    <label for="category">Category</label>
-    <select name="category" id="category">
-      <% categories.forEach(function(category) { %>
-    <% if (category.name == selected_category) { %>
-      <option value="<%= category._id %>" selected><%= category.name %></option>
-   <% } else { %>
-      <option value="<%= category._id %>"><%= category.name %></option>
-
-    <%  } %>   
-      <% }) %>
-    </select>
-  </div>
-
-  <div>
-    <textarea
-      name="description"
-      id="description"
-      placeholder="Enter category description..."
-      rows="4"
-      required
-      minlength="1"
-      maxlength="255"
-    >
-<%= description ? description : '' %></textarea
-    >
-  </div>
-
-  <div>
-    <label for="number">Price</label>
-    <input
-      type="number"
-      name="price"
-      id="price"
-      value="<%= price ? price : '' %>"
-    />
-  </div>
-
-  <div>
-    <label for="stock">Stock</label>
-
-    <input
-      type="number"
-      name="stock"
-      id="stock"
-      value="<%= stock ? stock : '' %>"
-    />
-  </div>
-  <button type="submit">Submit</button>
-</form>
-
-<% if (errors.length > 0) { %>
-<div>
-  <% errors.forEach(function(error) { %>
-  <p><%= error.msg %></p>
-  <% }); %>
-</div>
-<% } %>

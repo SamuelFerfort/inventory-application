@@ -1,14 +1,30 @@
+<h1 class="mt-4 mb-4"><%= title %></h1>
 
-<h1><%= title %></h1>
-
-<div class="card-container">
+<% if (foods && foods.length > 0) { %>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
   <% foods.forEach(function(food) { %>
-  <article class="food-card">
-    <a href="<%= food.url %>">
-      <img src="<%= food.imageURL %>" alt="<%= food.name %>" />
-      <h2><%= food.name %></h2>
-      <p>Price: $<%= food.price %></p>
-    </a>
-  </article>
+  <div class="col">
+    <div class="card h-100 food-card">
+      <img
+        src="<%= food.imageURL %>"
+        class="card-img-top"
+        alt="<%= food.name %>"
+      />
+      <div class="card-body">
+        <h5 class="card-title"><%= food.name %></h5>
+        <p class="card-text">Price: $<%= food.price %></p>
+        <a href="<%= food.url %>" class="btn btn-primary">View Details</a>
+      </div>
+    </div>
+  </div>
   <% }) %>
 </div>
+<% } else { %>
+<div class="alert alert-info text-center py-5" role="alert">
+  <h4 class="alert-heading">No Foods Available</h4>
+  <p class="mb-0">
+    There are currently no food items to display. Check back later or add some
+    new items!
+  </p>
+</div>
+<% } %>
