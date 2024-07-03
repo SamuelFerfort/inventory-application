@@ -1,13 +1,18 @@
 <%- contentFor('body') %>
 
+<h1><%= title %></h1>
 
-<% foods.forEach(function(food) { %>
+<div class="card-container">
+
+  <% foods.forEach(function(food) { %>
     <article class="food-card">
         <img src="<%= food.imageURL %>" alt="<%= food.name %>">
         <h2><%= food.name %></h2>
         <p>Price: $<%= food.price %> </p> 
     </article>
 <% }) %> 
+
+</div>
 
 
 
