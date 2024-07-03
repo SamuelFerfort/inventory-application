@@ -1,1 +1,1 @@
-### Inventory Application
+Inventory Application

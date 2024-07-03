@@ -1,0 +1,12 @@
+<h1>Admin Verification Required</h1>
+
+<form method="POST" class="admin">
+  <div>
+    <label for="admin_password">Enter Admin Password:</label>
+    <input type="password" id="admin_password" name="admin_password" required />
+    <input type="hidden" name="food_id" value="<%= food_id %>" />
+    <input type="submit" value="Verify" />
+  </div>
+
+  <span class="error"><%= error ? error : "" %></span>
+</form>

@@ -1,0 +1,14 @@
+<article>
+  <h1><%= food.name %></h1>
+  <img src="<%= food.imageURL %>" alt="<%= food.name %>" />
+
+  <p>Category: <%= food.category.name %></p>
+  <p>Description: <%= food.description %></p>
+  <p>Price: $<%= food.price %></p>
+  <p>Stock: <%= food.stock %></p>
+
+  <a href="<%= food.url %>/delete">Delete</a>
+  
+  <a href="<%= food.url %>/edit">Edit</a>
+  </div>
+</article>

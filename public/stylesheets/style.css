@@ -80,3 +80,19 @@ footer {
   flex-direction: column;
   align-items: center;
 }
+
+.food-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin {
+  display: flex;
+  flex-direction: column;
+}
+
+.error {
+  color: red;
+  
+}
