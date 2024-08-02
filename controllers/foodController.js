@@ -1,4 +1,4 @@
-const Food = require("../models/food");
+const Item = require("../models/food");
 require("dotenv").config();
 
 const Category = require("../models/category");
@@ -9,7 +9,7 @@ const adminPassword = process.env.ADMIN_PASSWORD;
 
 exports.index = asyncHandler(async (req, res, next) => {
   let [foods, categories] = await Promise.all([
-    Food.find(),
+    Food.get,
     Category.find().sort("name"),
   ]);
 
