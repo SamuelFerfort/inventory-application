@@ -2,14 +2,14 @@
     <div class="card">
       <div class="row g-0">
         <div class="col-md-6">
-          <img src="<%= food.imageURL %>" alt="<%= food.name %>" class="img-fluid rounded-start h-100 object-fit-cover" />
+          <img src="<%= food.imageurl %>" alt="<%= food.name %>" class="img-fluid rounded-start h-100 object-fit-cover" />
         </div>
         <div class="col-md-6">
           <div class="card-body">
             <h1 class="card-title mb-4"><%= food.name %></h1>
-            <p class="card-text"><strong>Category:</strong> <%= food.category.name %></p>
+            <p class="card-text"><strong>Category:</strong> <%= category.name %></p>
             <p class="card-text"><strong>Description:</strong> <%= food.description %></p>
-            <p class="card-text"><strong>Price:</strong> $<%= food.price.toFixed(2) %></p>
+            <p class="card-text"><strong>Price:</strong> $<%= food.price %></p>
             <p class="card-text"><strong>Stock:</strong> <%= food.stock %></p>
             
             <div class="mt-4">

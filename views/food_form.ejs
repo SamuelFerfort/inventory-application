@@ -8,10 +8,10 @@
       </div>
   
       <div class="mb-3">
-        <label for="category" class="form-label">Category</label>
-        <select name="category" id="category" class="form-select">
+        <label for="category_id" class="form-label">Category</label>
+        <select name="category_id" id="category_id" class="form-select">
           <% categories.forEach(function(category) { %>
-            <option value="<%= category._id %>" <%= category.name == selected_category ? 'selected' : '' %>>
+            <option value="<%= category.id %>" <%= category.id == selected_category ? 'selected' : '' %>>
               <%= category.name %>
             </option>
           <% }) %>
@@ -42,7 +42,11 @@
   
       <div class="mb-3">
         <label for="stock" class="form-label">Stock</label>
-        <input type="number" class="form-control" name="stock" id="stock" value="<%= stock ? stock : '' %>" min="0" required>
+        <input type="number" class="form-control" name="stock" id="stock" value="<%= locals.stock %>" min="0" required>
+      </div>
+      <div class="mb-3">
+        <label for="imageurl" class="form-label">Image URL</label>
+        <input type="text" class="form-control" name="imageurl" id="imageurl" value="<%= locals.imageurl %>"  required>
       </div>
   
       <button type="submit" class="btn btn-primary">Submit</button>

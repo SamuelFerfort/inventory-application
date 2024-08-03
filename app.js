@@ -12,15 +12,6 @@ const catalogRouter = require("./routes/catalog");
 
 const app = express();
 
-const mongoose = require("mongoose");
-mongoose.set("strictQuery", false);
-
-const mongoDB = process.env.DEV_DB_URL;
-
-main().catch((err) => console.log(err));
-async function main() {
-  await mongoose.connect(mongoDB);
-}
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -36,7 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(async (req, res, next) => {
   try {
-    const categories = await Category.find().sort("name").exec();
+    const categories = await Category.findAll()
     res.locals.categories = categories;
     next();
   } catch (err) {

@@ -1,36 +1,31 @@
 const Item = require("../models/food");
+const Category = require("../models/category");
 require("dotenv").config();
 
-const Category = require("../models/category");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 
 const adminPassword = process.env.ADMIN_PASSWORD;
 
 exports.index = asyncHandler(async (req, res, next) => {
-  let [foods, categories] = await Promise.all([
-    Food.get,
-    Category.find().sort("name"),
-  ]);
-
-  if (!categories && !foods) {
-    res.status(500).send("An error occurred");
+  const categoryId = req.params.id;
+  let foods, title;
+  if (categoryId) {
+    foods = await Item.findByCategoryId(categoryId);
+    const category = await Category.findById(categoryId);
+    title = category.name;
+  } else {
+    foods = await Item.findAll();
+    title = "All Categories";
   }
 
-  const categoryId = req.params.id;
-  let title = "All Categories";
-  if (categoryId) {
-    foods = foods.filter((food) => food.category == categoryId);
-    const category = categories.find(
-      (category) => category._id.toString() == categoryId
-    );
-    if (category) title = category.name;
+  if (!foods) {
+    res.status(500).send("An error occurred");
   }
 
   res.render("index", {
     title,
     foods,
-    categories,
   });
 });
 
@@ -44,26 +39,24 @@ exports.create_category_get = (req, res, next) => {
 exports.create_category_post = [
   body("name").trim().escape().isLength({ min: 3 }),
 
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     const errors = validationResult(req);
 
-    const category = new Category({ name: req.body.name });
+    console.log(errors);
     if (!errors.isEmpty()) {
-      res.render("category_form", {
+      return res.render("category_form", {
         title: "Create Category",
-        category,
+        category: req.body.name,
         errors: errors.array(),
       });
-    } else {
-      const categoryExists = await Category.findOne({ name: req.body.name })
-        .collation({ locale: "en", strength: 2 })
-        .exec();
-      if (categoryExists) {
-        res.redirect(categoryExists.url);
-      } else {
-        await category.save();
-        res.redirect(category.url);
-      }
+    }
+
+    try {
+      const category = await Category.create(req.body.name);
+      res.redirect(`/catalog/category/${category.id}`);
+    } catch (err) {
+      console.error("Error creating category:", err);
+      res.status(500).send("Internal Server Error");
     }
   }),
 ];
@@ -81,7 +74,7 @@ exports.create_food_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.create_food_post = [
-  body("name", "Title must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("name", "Name must not be empty").trim().isLength({ min: 3 }).escape(),
   body("description", "Description must not be empty")
     .trim()
     .isLength({ min: 1 })
@@ -95,53 +88,38 @@ exports.create_food_post = [
     .trim()
     .isInt({ min: 0 })
     .withMessage("Stock must be a non-negative integer"),
-    
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const { name, category, description, price, stock } = req.body;
-
-    
-    const categoryExists = await Category.findById(category);
-
-    if (!categoryExists) {
-      errors.errors.push({ msg: "Category does not exist", param: "category", location: "body" });
-    }
-    const food = new Food({
-      name,
-      category,
-      description,
-      price,
-      stock,
-      imageURL: `https://via.placeholder.com/300x200/FFD700/000000?text=${encodeURIComponent(
-        name
-      )}`,
-    });
+    const { name, category_id, description, price, stock, imageurl } = req.body;
 
     if (!errors.isEmpty()) {
-      res.render("food_form", {
+      return res.render("food_form", {
         title: "Add food",
         errors: errors.array(),
         name,
         description,
+        selected_category: category_id,
         price,
         stock,
+        imageurl,
       });
     } else {
-      await food.save();
-      res.redirect(food.url);
+      const foodId = await Item.create(req.body);
+      res.redirect(`/catalog/food/${foodId}`);
     }
   }),
 ];
 
 exports.food_detail_get = asyncHandler(async (req, res, next) => {
-  const food = await Food.findById(req.params.id).populate("category");
-
-  if (!food) {
+  const food = await Item.findById(req.params.id);
+  const category = await Category.findById(food.category_id);
+  if (!food && !category) {
     return res.status(404).send("Food item not found");
   } else {
     res.render("food_detail", {
       food,
+      category,
     });
   }
 });

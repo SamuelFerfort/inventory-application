@@ -13,15 +13,22 @@ class Item {
     return rows[0];
   }
 
+  static async findByCategoryId(id) {
+    const { rows } = await pool.query(
+      "SELECT * FROM items WHERE category_id = $1",
+      [id]
+    );
+    return rows;
+  }
   static async create(itemData) {
-    const { name, description, price, category_id, stock, imageURL } = itemData;
+    const { name, description, price, category_id, stock, imageurl } = itemData;
 
     const { rows } = await pool.query(
       "INSERT INTO items (name, description, price, category_id, stock, imageURL) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [name, description, price, category_id, stock, imageURL]
+      [name, description, price, category_id, stock, imageurl]
     );
 
-    return rows[0];
+    return rows[0].id;
   }
 
   static async update(id, userData) {

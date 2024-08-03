@@ -2,23 +2,25 @@ const pool = require("../db/pool");
 
 class Category {
   static async findAll() {
-    const { rows } = await pool.query("SELECT * FROM categories");
+    const { rows } = await pool.query("SELECT * FROM categories ORDER BY name");
     return rows;
   }
 
   static async findById(id) {
-    const { rows } = await pool.query("SELECT * FROM items WHERE id = $1", [
+    const { rows } = await pool.query("SELECT * FROM categories WHERE id = $1", [
       id,
     ]);
     return rows[0];
   }
 
+  
+
   static async create(name) {
     const { rows } = await pool.query(
-      "INSERT INTO categories (name) VALUE ($1) RETURNING *",
+      "INSERT INTO categories (name) VALUES ($1) RETURNING *",
       [name]
     );
-
+    
     return rows[0];
   }
 
