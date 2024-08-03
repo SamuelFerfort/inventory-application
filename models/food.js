@@ -31,15 +31,15 @@ class Item {
     return rows[0].id;
   }
 
-  static async update(id, userData) {
-    const { name, description, price, category_id, stock, imageURL } = itemData;
+  static async update(id, itemData) {
+    const { name, description, price, category_id, stock, imageurl } = itemData;
 
     const { rows } = await pool.query(
-      "UPDATE items SET name = $1, description = $2, price = $3, category_id = $4, stock = $5, imageURL = $6 WHERE id = $7",
-      [name, description, price, category_id, stock, imageURL, id]
+      "UPDATE items SET name = $1, description = $2, price = $3, category_id = $4, stock = $5, imageurl = $6 WHERE id = $7 RETURNING *",
+      [name, description, price, category_id, stock, imageurl, id]
     );
 
-    return rows[0];
+    return rows[0].id;
   }
   static async delete(id) {
     await pool.query("DELETE FROM items WHERE id = $1", [id]);

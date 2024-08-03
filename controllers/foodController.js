@@ -133,7 +133,7 @@ exports.food_delete_get = (req, res, next) => {
 
 exports.food_delete_post = asyncHandler(async (req, res, next) => {
   if (req.body.admin_password === adminPassword) {
-    await Food.findByIdAndDelete(req.params.id);
+    await Item.delete(req.params.id);
     res.redirect("/");
   } else {
     res.render("delete_verification", {
@@ -144,9 +144,11 @@ exports.food_delete_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.food_update_get = asyncHandler(async (req, res, next) => {
-  const food = await Food.findById(req.params.id).populate("category");
-  console.log(food);
+  const food = await Item.findById(req.params.id);
   if (!food) throw new Error("Food not found");
+
+  const category = await Category.findById(food.category_id);
+  if (!category) throw new Error("Category not found");
 
   res.render("food_form", {
     errors: [],
@@ -155,7 +157,8 @@ exports.food_update_get = asyncHandler(async (req, res, next) => {
     description: food.description,
     price: food.price,
     stock: food.stock,
-    selected_category: food.category.name,
+    selected_category: category.id,
+    imageurl: food.imageurl,
   });
 });
 
@@ -178,16 +181,11 @@ exports.food_update_post = [
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
-    const food = new Food({
-      name: req.body.name,
-      description: req.body.description,
-      price: req.body.price,
-      stock: req.body.stock,
-      category: req.body.category,
-      _id: req.params.id,
-    });
+
+  
+
     if (!errors.isEmpty()) {
-      res.render("food_form", {
+     return  res.render("food_form", {
         errors: errors.array(),
         title: "Edit food",
         name: req.body.name,
@@ -195,11 +193,12 @@ exports.food_update_post = [
         price: req.body.price,
         stock: req.body.stock,
         category: req.body.category,
+        imageurl: req.body.imageurl,
+        selected_category: req.body.category_id
       });
-      return;
     } else {
-      await Food.findByIdAndUpdate(req.params.id, food, {});
-      res.redirect(food.url);
+      const foodId = await Item.update(req.params.id, req.body)
+      res.redirect(`/catalog/food/${foodId}`);
     }
   }),
 ];
