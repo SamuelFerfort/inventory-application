@@ -37,12 +37,15 @@ exports.create_category_get = (req, res, next) => {
 };
 
 exports.create_category_post = [
-  body("name").trim().escape().isLength({ min: 3 }),
+  body("name").trim().escape().isLength({ min: 3 })
+  .custom( async (value) => {
+    const categoryExists = await Category.findByName(value)
+    if (categoryExists) throw new Error("Category already in use")
+  }),
 
   asyncHandler(async (req, res) => {
     const errors = validationResult(req);
 
-    console.log(errors);
     if (!errors.isEmpty()) {
       return res.render("category_form", {
         title: "Create Category",

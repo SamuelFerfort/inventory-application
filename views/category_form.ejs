@@ -1,21 +1,30 @@
 <div class="container mt-4">
-    <h1 class="mb-4"><%= title %></h1>
-  
-    <form method="post">
-      <div class="mb-3">
-        <label for="name" class="form-label">Category Name:</label>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          class="form-control"
-          placeholder="Seafood, Dairy..."
-          required
-          minlength="1"
-          maxlength="30"
-          value="<%= category ? category : '' %>"
-        />
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+  <h1 class="mb-4"><%= title %></h1>
+
+  <form method="post">
+    <div class="mb-3">
+      <label for="name" class="form-label">Category Name:</label>
+      <input
+        type="text"
+        name="name"
+        id="name"
+        class="form-control"
+        placeholder="Seafood, Dairy..."
+        required
+        minlength="1"
+        maxlength="30"
+        value="<%= category ? category : '' %>"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  <% if (locals.errors && errors.length > 0) { %>
+  <div class="alert alert-danger mt-3">
+    <ul class="mb-0">
+      <% errors.forEach(function(error) { %>
+      <li><%= error.msg %></li>
+      <% }); %>
+    </ul>
   </div>
+  <% } %>
+</div>

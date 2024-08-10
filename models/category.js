@@ -7,20 +7,28 @@ class Category {
   }
 
   static async findById(id) {
-    const { rows } = await pool.query("SELECT * FROM categories WHERE id = $1", [
-      id,
-    ]);
+    const { rows } = await pool.query(
+      "SELECT * FROM categories WHERE id = $1",
+      [id]
+    );
     return rows[0];
   }
 
-  
+  static async findByName(name) {
+    const { rows } = await pool.query(
+      "SELECT name FROM categories WHERE LOWER(name) = LOWER($1)",
+      [name]
+    );
+
+    return rows[0];
+  }
 
   static async create(name) {
     const { rows } = await pool.query(
       "INSERT INTO categories (name) VALUES ($1) RETURNING *",
       [name]
     );
-    
+
     return rows[0];
   }
 
